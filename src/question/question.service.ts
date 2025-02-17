@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Question } from './schemas/question.schema';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { QuestionDto } from './dto/question.dto';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class QuestionService {
@@ -12,10 +13,20 @@ export class QuestionService {
 
   // 创建问卷
   async create(username: string) {
+    // 生成问卷ID
+    const fe_id = nanoid(16); // 直接生成16位的ID
     const question = new this.questionModel({
-      title: 'title' + Date.now(),
-      desc: '这是一个问卷描述' + Date.now(),
+      title: '文件标题' + Date.now(),
+      desc: '问卷描述' + Date.now(),
       author: username, // 添加创建者信息
+      componentList: [
+        {
+          fe_id,
+          type: 'questionInfo',
+          title: '问卷信息',
+          props: { title: '问卷标题', desc: '问卷描述' },
+        },
+      ],
     });
     return await question.save();
   }
@@ -39,10 +50,10 @@ export class QuestionService {
   }
 
   // 更新
-  async update(id: string, updateData: Question) {
+  async update(id: string, updateData: QuestionDto) {
     const question = await this.questionModel.findByIdAndUpdate(
       id,
-      updateData,
+      { $set: updateData },
       { new: true },
     );
     if (!question) {
