@@ -11,10 +11,11 @@ export class QuestionService {
   ) {}
 
   // 创建问卷
-  async create() {
+  async create(username: string) {
     const question = new this.questionModel({
       title: 'title' + Date.now(),
       desc: '这是一个问卷描述' + Date.now(),
+      author: username, // 添加创建者信息
     });
     return await question.save();
   }

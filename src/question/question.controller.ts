@@ -9,10 +9,12 @@ import {
   HttpStatus,
   Post,
   Delete,
+  Request,
 } from '@nestjs/common';
 
 import { QuestionDto } from './dto/question.dto';
 import { QuestionService } from './question.service';
+import { RequestWithUser } from '../auth/auth.guard';
 
 @Controller('question')
 export class QuestionController {
@@ -27,8 +29,9 @@ export class QuestionController {
 
   // 创建
   @Post()
-  create() {
-    return this.questionService.create();
+  create(@Request() req: RequestWithUser) {
+    const { username } = req.user;
+    return this.questionService.create(username);
   }
 
   // 查询全部问卷
