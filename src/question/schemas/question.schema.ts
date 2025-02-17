@@ -9,7 +9,7 @@ export class Question {
   title: string;
 
   @Prop()
-  desc: number;
+  desc: string;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);
