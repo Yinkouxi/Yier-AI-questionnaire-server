@@ -5,6 +5,7 @@ import { QuestionModule } from './question/question.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(
       `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`,
     ),
-    UserModule, //不要写localhost
+    UserModule,
+    AuthModule, //不要写localhost
   ],
   controllers: [AppController],
   providers: [AppService],
