@@ -32,8 +32,11 @@ export class QuestionService {
   }
 
   // 查询单个问卷
-  async findOne(id: string): Promise<Question> {
-    const question = await this.questionModel.findById(id);
+  async findOne(id: string, author: string): Promise<Question> {
+    const question = await this.questionModel.findOne({
+      _id: id,
+      author,
+    });
     if (!question) {
       throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
     }
@@ -41,18 +44,36 @@ export class QuestionService {
   }
 
   // 删除
-  async delete(id: string) {
-    const question = await this.questionModel.findByIdAndDelete(id);
-    if (!question) {
+  async delete(id: string, author: string) {
+    // const question = await this.questionModel.findByIdAndDelete(id);
+    // if (!question) {
+    //   throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
+    // }
+    // return question;
+    const res = await this.questionModel.findOneAndDelete({
+      _id: id,
+      author,
+    });
+    if (!res) {
       throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
     }
-    return question;
+  }
+
+  // 删除多个
+  async deleteMany(ids: string[], author: string) {
+    const res = await this.questionModel.deleteMany({
+      _id: { $in: ids },
+      author,
+    });
+    if (!res) {
+      throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
+    }
   }
 
   // 更新
-  async update(id: string, updateData: QuestionDto) {
-    const question = await this.questionModel.findByIdAndUpdate(
-      id,
+  async update(id: string, updateData: QuestionDto, author: string) {
+    const question = await this.questionModel.findOneAndUpdate(
+      { _id: id, author },
       { $set: updateData },
       { new: true },
     );
@@ -63,12 +84,40 @@ export class QuestionService {
   }
 
   // 查询全部问卷
-  async findAllList(page: number, pageSize: number, keyword: string) {
-    const whereOpt: { title?: { $regex: string; $options: string } } = {};
+  async findAllList(
+    page: number,
+    pageSize: number,
+    keyword: string,
+    isStar: boolean,
+    isDelete: boolean,
+    username: string,
+  ) {
+    const whereOpt: {
+      title?: { $regex: string; $options: string };
+      isDelete?: boolean;
+      isStar?: boolean;
+      author?: string;
+    } = {};
+
+    // 根据关键字搜索标题
     if (keyword) {
-      // 模糊搜索
       whereOpt.title = { $regex: keyword, $options: 'i' };
     }
+
+    // 根据条件筛选
+    if (isDelete) {
+      whereOpt.isDelete = true;
+    } else {
+      whereOpt.isDelete = false;
+    }
+
+    if (isStar) {
+      whereOpt.isStar = true;
+    }
+
+    // 只查询当前用户的问卷
+    whereOpt.author = username;
+
     return await this.questionModel
       .find(whereOpt)
       .sort({ _id: -1 }) // 按id降序排序
@@ -77,12 +126,19 @@ export class QuestionService {
   }
 
   // 查询问卷数量
-  async countAll(keyword: string) {
-    const whereOpt: { title?: { $regex: string; $options: string } } = {};
+  async countAll(keyword: string, username: string) {
+    const whereOpt: {
+      title?: { $regex: string; $options: string };
+      author?: string;
+    } = {};
+
     if (keyword) {
-      // 模糊搜索
       whereOpt.title = { $regex: keyword, $options: 'i' };
     }
+
+    // 只统计当前用户的问卷
+    whereOpt.author = username;
+
     return await this.questionModel.countDocuments(whereOpt);
   }
 }

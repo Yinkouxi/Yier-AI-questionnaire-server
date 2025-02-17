@@ -40,13 +40,20 @@ export class QuestionController {
     @Query('page') page: number = 1,
     @Query('pageSize') pageSize: number = 10,
     @Query('keyword') keyword: string = '',
+    @Query('isStar') isStar: boolean = false,
+    @Query('isDelete') isDelete: boolean = false,
+    @Request() req: RequestWithUser,
   ) {
+    const { username } = req.user;
     const list = await this.questionService.findAllList(
       page,
       pageSize,
       keyword,
+      isStar,
+      isDelete,
+      username,
     );
-    const count = await this.questionService.countAll(keyword);
+    const count = await this.questionService.countAll(keyword, username);
     return {
       list,
       count,
@@ -54,21 +61,34 @@ export class QuestionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    console.log(id, 'id');
-    return this.questionService.findOne(id);
+  findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
+    const { username: author } = req.user;
+    return this.questionService.findOne(id, author);
   }
 
   // 更新
   @Patch(':id')
-  updateOne(@Param('id') id: string, @Body() questionDto: QuestionDto) {
+  updateOne(
+    @Param('id') id: string,
+    @Body() questionDto: QuestionDto,
+    @Request() req: RequestWithUser,
+  ) {
     console.log(id, questionDto, 'body');
-    return this.questionService.update(id, questionDto);
+    const { username: author } = req.user;
+    return this.questionService.update(id, questionDto, author);
   }
 
   // 删除
   @Delete(':id')
-  deleteOne(@Param('id') id: string) {
-    return this.questionService.delete(id);
+  deleteOne(@Param('id') id: string, @Request() req: RequestWithUser) {
+    const { username: author } = req.user;
+    return this.questionService.delete(id, author);
+  }
+
+  // 删除多个
+  @Delete()
+  deleteMany(@Body() ids: string[], @Request() req: RequestWithUser) {
+    const { username: author } = req.user;
+    return this.questionService.deleteMany(ids, author);
   }
 }

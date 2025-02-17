@@ -1,5 +1,5 @@
 export class QuestionDto {
-  title?: string; // 标题
+  title: string; // 标题
 
   desc?: string; // 描述
 
