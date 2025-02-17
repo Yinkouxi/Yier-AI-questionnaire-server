@@ -8,7 +8,7 @@ export class AuthService {
   // 注入用户服务
   constructor(
     private readonly userService: UserService,
-    private readonly JwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signIn(username: string, password: string) {
@@ -16,10 +16,20 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('用户名或密码错误');
     }
-    const { password: p, ...userInfo } = user.toObject(); // eslint-disable-line @typescript-eslint/no-unused-vars
-    // return userInfo;
+
+    // 从用户文档中提取需要的信息
+    const { password: _, ...userInfo } = user.toObject();
+
+    // 创建 JWT payload
+    const payload = {
+      sub: user._id.toString(), // 用户ID作为subject
+      username: user.username, // 用户名
+      nickname: user.nickname, // 昵称
+    };
+
+    // 返回生成的 token（iat 和 exp 由 JWT 服务自动添加）
     return {
-      token: this.JwtService.sign(userInfo),
+      token: this.jwtService.sign(payload),
     };
   }
 }
