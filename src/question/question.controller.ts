@@ -91,4 +91,11 @@ export class QuestionController {
     const { username: author } = req.user;
     return this.questionService.deleteMany(ids, author);
   }
+
+  // 复制问卷
+  @Post('duplicate/:id')
+  duplicate(@Param('id') id: string, @Request() req: RequestWithUser) {
+    const { username: author } = req.user;
+    return this.questionService.duplicate(id, author);
+  }
 }
