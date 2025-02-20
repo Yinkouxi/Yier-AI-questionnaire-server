@@ -15,7 +15,6 @@ export class UserController {
     try {
       return await this.userService.create(userDto);
     } catch (error) {
-      console.log(error);
       throw new HttpException(`注册失败: ${error}`, HttpStatus.BAD_REQUEST);
     }
   }
