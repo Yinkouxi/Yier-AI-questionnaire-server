@@ -32,11 +32,18 @@ export class QuestionService {
   }
 
   // 查询单个问卷
-  async findOne(id: string, author: string): Promise<Question> {
-    const question = await this.questionModel.findOne({
-      _id: id,
-      author,
-    });
+  // async findOne(id: string, author: string): Promise<Question> {
+  //   const question = await this.questionModel.findOne({
+  //     _id: id,
+  //     author,
+  //   });
+  //   if (!question) {
+  //     throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
+  //   }
+  //   return question;
+  // }
+  async findOne(id: string): Promise<Question> {
+    const question = await this.questionModel.findById(id);
     if (!question) {
       throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
     }
@@ -164,5 +171,13 @@ export class QuestionService {
     });
 
     return await newQuestion.save(); // 保存新问卷到数据库
+  }
+
+  // 答卷：获取问卷
+  async getQuestion(id: string) {
+    const question = await this.questionModel.findById(id);
+    if (!question) {
+      throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
+    }
   }
 }

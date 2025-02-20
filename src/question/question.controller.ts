@@ -15,6 +15,7 @@ import {
 import { QuestionDto } from './dto/question.dto';
 import { QuestionService } from './question.service';
 import { RequestWithUser } from '../auth/auth.guard';
+import { Public } from 'src/auth/decorators/public.decorators';
 
 @Controller('question')
 export class QuestionController {
@@ -56,14 +57,23 @@ export class QuestionController {
     const count = await this.questionService.countAll(keyword, username);
     return {
       list,
-      count,
+      total: count,
     };
   }
 
+  // 查询单个问卷
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: RequestWithUser) {
-    const { username: author } = req.user;
-    return this.questionService.findOne(id, author);
+    // const { username: author } = req.user;
+    // return this.questionService.findOne(id, author);
+    return this.questionService.findOne(id);
+  }
+
+  // 答卷：获取问卷
+  @Get('answer/:id')
+  getQuestion(@Param('id') id: string) {
+    return this.questionService.getQuestion(id);
   }
 
   // 更新
