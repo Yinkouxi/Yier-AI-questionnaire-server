@@ -97,7 +97,7 @@ export class QuestionController {
 
   // 删除多个
   @Delete()
-  deleteMany(@Body() ids: string[], @Request() req: RequestWithUser) {
+  deleteMany(@Body('ids') ids: string[], @Request() req: RequestWithUser) {
     const { username: author } = req.user;
     return this.questionService.deleteMany(ids, author);
   }
