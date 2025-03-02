@@ -34,6 +34,9 @@ export class Question {
   @Prop({ default: false })
   isDelete: boolean; // 是否删除
 
+  @Prop({ default: 0 })
+  answerCount: number; // 答卷数量
+
   @Prop()
   componentList: {
     fe_id: string; // 组件ID 前端控制和生成
