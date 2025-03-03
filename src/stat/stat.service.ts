@@ -198,4 +198,18 @@ export class StatService {
     }
     return statList;
   }
+
+  // 获取平台总问卷数和总答卷数
+  async getPlatformStats() {
+    // 获取总问卷数
+    const totalQuestions = await this.questionService.count();
+
+    // 获取总答卷数
+    const totalAnswers = await this.answerService.count();
+
+    return {
+      totalQuestions,
+      totalAnswers,
+    };
+  }
 }

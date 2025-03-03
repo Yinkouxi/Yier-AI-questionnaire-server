@@ -7,6 +7,12 @@ export class StatController {
   constructor(private readonly statService: StatService) {}
 
   @Public()
+  @Get('platform/overview')
+  async getPlatformStats() {
+    return await this.statService.getPlatformStats();
+  }
+
+  @Public()
   @Get(':questionId')
   getQuestionStat(
     @Param('questionId') questionId: string,

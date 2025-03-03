@@ -180,4 +180,9 @@ export class QuestionService {
       throw new HttpException('问卷不存在', HttpStatus.NOT_FOUND);
     }
   }
+
+  // 获取问卷总数
+  async count(): Promise<number> {
+    return await this.questionModel.countDocuments();
+  }
 }

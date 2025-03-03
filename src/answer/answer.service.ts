@@ -68,4 +68,9 @@ export class AnswerService {
       .sort({ createdAt: -1 });
     return answers;
   }
+
+  // 获取总答卷数
+  async count(): Promise<number> {
+    return await this.answerModel.countDocuments();
+  }
 }
