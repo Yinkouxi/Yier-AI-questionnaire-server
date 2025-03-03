@@ -32,7 +32,7 @@ export class Question {
   isStar: boolean; // 是否收藏
 
   @Prop({ default: false })
-  isDelete: boolean; // 是否删除
+  isDeleted: boolean; // 是否删除
 
   @Prop({ default: 0 })
   answerCount: number; // 答卷数量

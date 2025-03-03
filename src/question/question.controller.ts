@@ -42,7 +42,7 @@ export class QuestionController {
     @Query('pageSize') pageSize: number = 10,
     @Query('keyword') keyword: string = '',
     @Query('isStar') isStar: boolean = false,
-    @Query('isDelete') isDelete: boolean = false,
+    @Query('isDeleted') isDeleted: boolean = false,
     @Request() req: RequestWithUser,
   ) {
     const { username } = req.user;
@@ -51,7 +51,7 @@ export class QuestionController {
       pageSize,
       keyword,
       isStar,
-      isDelete,
+      isDeleted,
       username,
     );
     const count = await this.questionService.countAll(keyword, username);
@@ -83,7 +83,6 @@ export class QuestionController {
     @Body() questionDto: QuestionDto,
     @Request() req: RequestWithUser,
   ) {
-    console.log(id, questionDto, 'body');
     const { username: author } = req.user;
     return this.questionService.update(id, questionDto, author);
   }

@@ -13,7 +13,7 @@ export class QuestionDto {
 
   isStar?: boolean; // 是否收藏
 
-  isDelete?: boolean; // 是否删除
+  isDeleted?: boolean; // 是否删除
 
   componentList?: {
     fe_id: string; // 组件ID

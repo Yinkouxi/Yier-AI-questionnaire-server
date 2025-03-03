@@ -152,7 +152,6 @@ export class StatService {
     const { componentList = [] } = q;
     const comp = componentList.find((c) => c.fe_id === componentFeId);
     if (comp == null) return [];
-    console.log(comp, 'comp');
 
     const { type, props } = comp;
     if (type !== 'questionRadio' && type !== 'questionCheckbox') {

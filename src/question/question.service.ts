@@ -96,12 +96,12 @@ export class QuestionService {
     pageSize: number,
     keyword: string,
     isStar: boolean,
-    isDelete: boolean,
+    isDeleted: boolean,
     username: string,
   ) {
     const whereOpt: {
       title?: { $regex: string; $options: string };
-      isDelete?: boolean;
+      isDeleted?: boolean;
       isStar?: boolean;
       author?: string;
     } = {};
@@ -112,10 +112,10 @@ export class QuestionService {
     }
 
     // 根据条件筛选
-    if (isDelete) {
-      whereOpt.isDelete = true;
+    if (isDeleted) {
+      whereOpt.isDeleted = true;
     } else {
-      whereOpt.isDelete = false;
+      whereOpt.isDeleted = false;
     }
 
     if (isStar) {
@@ -160,7 +160,7 @@ export class QuestionService {
       ...question.toObject(),
       _id: new Types.ObjectId(), // 使用正确导入的 Types.ObjectId
       title: question.title + '（副本）',
-      isDelete: false,
+      isDeleted: false,
       isStar: false,
       isPublished: false,
       componentList: question.componentList.map((component) => ({
