@@ -133,14 +133,31 @@ export class QuestionService {
   }
 
   // 查询问卷数量
-  async countAll(keyword: string, username: string) {
+  async countAll(
+    keyword: string,
+    username: string,
+    isStar: boolean,
+    isDeleted: boolean,
+  ) {
     const whereOpt: {
       title?: { $regex: string; $options: string };
       author?: string;
+      isDeleted?: boolean;
+      isStar?: boolean;
     } = {};
 
     if (keyword) {
       whereOpt.title = { $regex: keyword, $options: 'i' };
+    }
+
+    if (isDeleted) {
+      whereOpt.isDeleted = true;
+    } else {
+      whereOpt.isDeleted = false;
+    }
+
+    if (isStar) {
+      whereOpt.isStar = true;
     }
 
     // 只统计当前用户的问卷

@@ -54,7 +54,12 @@ export class QuestionController {
       isDeleted,
       username,
     );
-    const count = await this.questionService.countAll(keyword, username);
+    const count = await this.questionService.countAll(
+      keyword,
+      username,
+      isStar,
+      isDeleted,
+    );
     return {
       list,
       total: count,
