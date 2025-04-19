@@ -98,12 +98,14 @@ export class QuestionService {
     isStar: boolean,
     isDeleted: boolean,
     username: string,
+    isPublished?: boolean,
   ) {
     const whereOpt: {
       title?: { $regex: string; $options: string };
       isDeleted?: boolean;
       isStar?: boolean;
       author?: string;
+      isPublished?: boolean;
     } = {};
 
     // 根据关键字搜索标题
@@ -122,6 +124,11 @@ export class QuestionService {
       whereOpt.isStar = true;
     }
 
+    // 根据发布状态筛选
+    if (isPublished !== undefined) {
+      whereOpt.isPublished = isPublished;
+    }
+
     // 只查询当前用户的问卷
     whereOpt.author = username;
 
@@ -138,12 +145,14 @@ export class QuestionService {
     username: string,
     isStar: boolean,
     isDeleted: boolean,
+    isPublished?: boolean,
   ) {
     const whereOpt: {
       title?: { $regex: string; $options: string };
       author?: string;
       isDeleted?: boolean;
       isStar?: boolean;
+      isPublished?: boolean;
     } = {};
 
     if (keyword) {
@@ -158,6 +167,11 @@ export class QuestionService {
 
     if (isStar) {
       whereOpt.isStar = true;
+    }
+
+    // 根据发布状态筛选
+    if (isPublished !== undefined) {
+      whereOpt.isPublished = isPublished;
     }
 
     // 只统计当前用户的问卷

@@ -44,6 +44,7 @@ export class QuestionController {
     @Query('isStar') isStar: boolean = false,
     @Query('isDeleted') isDeleted: boolean = false,
     @Request() req: RequestWithUser,
+    @Query('isPublished') isPublished?: boolean,
   ) {
     const { username } = req.user;
     const list = await this.questionService.findAllList(
@@ -53,12 +54,14 @@ export class QuestionController {
       isStar,
       isDeleted,
       username,
+      isPublished,
     );
     const count = await this.questionService.countAll(
       keyword,
       username,
       isStar,
       isDeleted,
+      isPublished,
     );
     return {
       list,
