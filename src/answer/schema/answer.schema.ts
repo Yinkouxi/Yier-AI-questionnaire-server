@@ -15,7 +15,13 @@ export class Answer {
   }[];
 
   @Prop()
+  fingerprint: string; // 浏览器指纹
+
+  @Prop()
   breed: string;
 }
 
 export const AnswerSchema = SchemaFactory.createForClass(Answer);
+
+// 创建复合索引以确保一个指纹只能提交一次问卷
+AnswerSchema.index({ questionId: 1, fingerprint: 1 }, { unique: true });
